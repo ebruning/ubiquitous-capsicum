@@ -3,8 +3,37 @@
 require 'rest_client'
 require 'nokogiri'
 require "base64"
+require 'optparse'
 
-base_folder = "/Users/ethan/Raw"
+
+options = {}
+options_parsers = OptionParser.new do |opts|
+  opts.on("-a ADDRESS") do |address|
+    options[:address] = address
+  end
+
+  opts.on("-p PROJECT", "--project PROJECT") do |project|
+    options[:project] = project
+  end
+
+  opts.on("-d DIRECTORY") do |directory|
+    unless Dir.exists?(directory)
+      raise ArgumentError, "DIRECTORY doesn't exist"
+    end
+    options[:directory] = directory
+  end
+end
+
+options_parsers.parse!
+
+# puts options.inspect
+# exit
+
+base_folder = options[:directory]
+address = options[:address]
+project = options[:project]
+
+# TODO: create and cleanup evrs folder
 
 $image_folders = Dir.glob("#{base_folder}/**/*.jpg")
 
@@ -14,7 +43,7 @@ $image_folders.each do |file|
   new_filename = File.basename(file)
   new_filename = File.join(File.dirname(file), "evrs/#{new_filename}.tif")
 
-  response = RestClient.post('http://172.31.1.115/mobilesdk/api/color',
+  response = RestClient.post("http://#{address}/mobilesdk/api/#{project}",
                                 {
                                   :processImage => 'true',
                                   :imageResult => 'true',
