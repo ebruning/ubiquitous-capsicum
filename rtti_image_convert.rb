@@ -29,7 +29,6 @@ base_folder = options[:directory]
 address = options[:address]
 project = options[:project]
 
-# TODO: create and cleanup evrs folder
 if !Dir.exists?("#{base_folder}/evrs/")
   puts "creating evrs folder"
   Dir.mkdir("#{base_folder}/evrs/")
