@@ -25,9 +25,6 @@ end
 
 options_parsers.parse!
 
-# puts options.inspect
-# exit
-
 base_folder = options[:directory]
 address = options[:address]
 project = options[:project]
