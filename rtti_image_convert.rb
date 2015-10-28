@@ -39,9 +39,9 @@ if Dir.glob("#{base_folder}/evrs/*")
   FileUtils.rm_rf(Dir.glob("#{base_folder}/evrs/*"))
 end
 
-$image_folders = Dir.glob("#{base_folder}/**/*.jpg")
+image_folders = Dir.glob("#{base_folder}/**/*.jpg")
 
-$image_folders.each do |file|
+image_folders.each do |file|
   puts "sending => #{file}"
 
   new_filename = File.basename(file)
