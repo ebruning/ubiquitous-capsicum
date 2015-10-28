@@ -5,7 +5,6 @@ require 'nokogiri'
 require "base64"
 require 'optparse'
 
-
 options = {}
 options_parsers = OptionParser.new do |opts|
   opts.on("-a ADDRESS") do |address|
