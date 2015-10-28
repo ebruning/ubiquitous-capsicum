@@ -33,6 +33,15 @@ address = options[:address]
 project = options[:project]
 
 # TODO: create and cleanup evrs folder
+if !Dir.exists?("#{base_folder}/evrs/")
+  puts "creating evrs folder"
+  Dir.mkdir("#{base_folder}/evrs/")
+end
+
+if Dir.glob("#{base_folder}/evrs/*")
+  puts "cleaning up evrs folder"
+  FileUtils.rm_rf(Dir.glob("#{base_folder}/evrs/*"))
+end
 
 $image_folders = Dir.glob("#{base_folder}/**/*.jpg")
 
@@ -40,7 +49,7 @@ $image_folders.each do |file|
   puts "sending => #{file}"
 
   new_filename = File.basename(file)
-  new_filename = File.join(File.dirname(file), "evrs/#{new_filename}.tif")
+  new_filename = File.join(base_folder, "evrs/#{new_filename}.tif")
 
   response = RestClient.post("http://#{address}/mobilesdk/api/#{project}",
                                 {
