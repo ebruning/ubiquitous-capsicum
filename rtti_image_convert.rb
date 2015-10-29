@@ -17,7 +17,7 @@ options_parsers = OptionParser.new do |opts|
 
   opts.on("-d DIRECTORY") do |directory|
     unless Dir.exists?(directory)
-      raise ArgumentError, "DIRECTORY doesn't exist"
+      raise ArgumentError, "The #{directory} directory doesn't exist"
     end
     options[:directory] = directory
   end
