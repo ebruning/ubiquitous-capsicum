@@ -44,7 +44,7 @@ image_folders = Dir.glob("#{base_folder}/**/*.jpg")
 image_folders.each do |file|
   puts "sending => #{file}"
 
-  new_filename = File.basename(file)
+  new_filename = File.basename(file).downcase.chomp(".jpg")
   new_filename = File.join(base_folder, "evrs/#{new_filename}.tif")
 
   response = RestClient.post("http://#{address}/mobilesdk/api/#{project}",
