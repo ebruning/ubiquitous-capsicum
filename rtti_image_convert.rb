@@ -37,10 +37,6 @@ else
   FileUtils.rm_rf(Dir.glob("#{base_folder}/evrs/*"))
 end
 
-# if Dir.glob("#{base_folder}/evrs/*")
-#
-# end
-
 image_folders = Dir.glob("#{base_folder}/**/*.jpg")
 
 image_folders.each do |file|
