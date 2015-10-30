@@ -5,6 +5,11 @@ require 'nokogiri'
 require "base64"
 require 'optparse'
 
+def delete_folder(base_folder)
+  puts "cleaning up evrs folder"
+  FileUtils.rm_rf(Dir.glob("#{base_folder}/evrs/*"))
+end
+
 options = {}
 options_parsers = OptionParser.new do |opts|
   opts.on("-a ADDRESS") do |address|
@@ -33,8 +38,7 @@ if !Dir.exists?("#{base_folder}/evrs/")
   puts "creating evrs folder"
   Dir.mkdir("#{base_folder}/evrs/")
 else
-  puts "cleaning up evrs folder"
-  FileUtils.rm_rf(Dir.glob("#{base_folder}/evrs/*"))
+  delete_folder (base_folder)
 end
 
 image_folders = Dir.glob("#{base_folder}/**/*.jpg")
