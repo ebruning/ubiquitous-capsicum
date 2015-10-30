@@ -32,12 +32,14 @@ project = options[:project]
 if !Dir.exists?("#{base_folder}/evrs/")
   puts "creating evrs folder"
   Dir.mkdir("#{base_folder}/evrs/")
-end
-
-if Dir.glob("#{base_folder}/evrs/*")
+else
   puts "cleaning up evrs folder"
   FileUtils.rm_rf(Dir.glob("#{base_folder}/evrs/*"))
 end
+
+# if Dir.glob("#{base_folder}/evrs/*")
+#
+# end
 
 image_folders = Dir.glob("#{base_folder}/**/*.jpg")
 
