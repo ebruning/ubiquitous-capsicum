@@ -37,7 +37,7 @@ end
 
 def summary_message(base, image_count, image_total, images)
   puts "output folder #{base}/evrs/"
-  puts "procced #{image_count}/#{image_total}"
+  puts "processed #{image_count}/#{image_total}"
 
   if (images.length > 0)
     puts
@@ -86,7 +86,7 @@ failed_images = Array[]
 
 image_folders.each do |file|
   puts "sending  => #{File.basename(file)}"
-  
+
   new_filename = File.join(base_folder, "evrs/#{File.basename(file).downcase.chomp(".jpg")}.tif")
 
   begin
