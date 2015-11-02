@@ -5,6 +5,21 @@ require 'nokogiri'
 require "base64"
 require 'optparse'
 
+module Tty extend self
+  def blue; bold 34; end
+  def white; bold 39; end
+  def red; underline 31; end
+  def reset; escape 0; end
+  def bold n; escape "1;#{n}" end
+  def underline n; escape "4;#{n}" end
+  def escape n; "\033[#{n}m" if STDOUT.tty? end
+end
+
+def error(warning)
+  puts "#{Tty.red}ERROR#{Tty.reset}: #{warning}"
+  puts
+end
+
 def delete_folder(base_folder)
   puts "cleaning up evrs folder"
   FileUtils.rm_rf(Dir.glob("#{base_folder}/evrs/*"))
@@ -20,9 +35,17 @@ def write_image_from_xml(doc, new_filename)
   end
 end
 
-def summary_message(base, image_count, image_total)
+def summary_message(base, image_count, image_total, images)
   puts "output folder #{base}/evrs/"
   puts "procced #{image_count}/#{image_total}"
+
+  if (images.length > 0)
+    puts
+    puts "#{Tty.red}failed images#{Tty.reset}\n"
+    images.each do |file|
+      puts "\t#{file}"
+    end
+  end
 end
 
 options = {}
@@ -59,6 +82,7 @@ end
 image_folders = Dir.glob("#{base_folder}/**/*.jpg")
 
 count = 0
+failed_images = Array[]
 
 image_folders.each do |file|
   puts "sending  => #{File.basename(file)}"
@@ -77,8 +101,9 @@ image_folders.each do |file|
                               )
 
   rescue RestClient::ExceptionWithResponse => err
-    puts "response => #{err}"
-    puts
+    # puts "response => #{err}"
+    error(err)
+    failed_images.push(file)
   end
 
     if (response)
@@ -88,4 +113,4 @@ image_folders.each do |file|
     end
 end
 
-summary_message(base_folder, count, image_folders.length)
+summary_message(base_folder, count, image_folders.length, failed_images)
