@@ -64,8 +64,7 @@ image_folders.each do |file|
   puts "sending  => #{File.basename(file)}"
   count += 1
 
-  new_filename = File.basename(file).downcase.chomp(".jpg")
-  new_filename = File.join(base_folder, "evrs/#{new_filename}.tif")
+  new_filename = File.join(base_folder, "evrs/#{File.basename(file).downcase.chomp(".jpg")}.tif")
 
   response = RestClient.post("http://#{address}/mobilesdk/api/#{project}",
                                 {
