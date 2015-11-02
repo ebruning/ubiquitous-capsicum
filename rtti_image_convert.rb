@@ -101,7 +101,6 @@ image_folders.each do |file|
                               )
 
   rescue RestClient::ExceptionWithResponse => err
-    # puts "response => #{err}"
     error(err)
     failed_images.push(file)
   end
