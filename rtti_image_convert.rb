@@ -46,9 +46,9 @@ image_folders = Dir.glob("#{base_folder}/**/*.jpg")
 count = 0
 
 image_folders.each do |file|
-  puts "sending  => #{file}"
+  puts "sending  => #{File.basename(file)}"
   count += 1
-
+  
   new_filename = File.basename(file).downcase.chomp(".jpg")
   new_filename = File.join(base_folder, "evrs/#{new_filename}.tif")
 
@@ -66,7 +66,7 @@ image_folders.each do |file|
   doc = Nokogiri::HTML(response.body)
   doc.xpath('//image').each do |link|
     File.open(new_filename, 'wb') do|f|
-      puts "saving   => #{new_filename}"
+      puts "saving   => #{File.basename(new_filename)}"
       f.write(Base64.decode64(link.content))
     end
   end
