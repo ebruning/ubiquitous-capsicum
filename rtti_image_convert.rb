@@ -62,23 +62,30 @@ count = 0
 
 image_folders.each do |file|
   puts "sending  => #{File.basename(file)}"
-  count += 1
+
 
   new_filename = File.join(base_folder, "evrs/#{File.basename(file).downcase.chomp(".jpg")}.tif")
 
-  response = RestClient.post("http://#{address}/mobilesdk/api/#{project}",
-                                {
-                                  :processImage => 'true',
-                                  :imageResult => 'true',
-                                  :accept => :json,
-                                  :name_of_file_param => File.new(file)
-                                }
-                            )
+  begin
+    response = RestClient.post("http://#{address}/mobilesdk/api/#{project}",
+                                  {
+                                    :processImage => 'true',
+                                    :imageResult => 'true',
+                                    :accept => :json,
+                                    :name_of_file_param => File.new(file)
+                                  }
+                              )
 
-  puts "response => #{response.code}"
+  rescue RestClient::ExceptionWithResponse => err
+    puts "response => #{err}"
+    puts
+  end
 
-  write_image_from_xml(Nokogiri::HTML(response.body), new_filename)
-
+    if (response)
+      count += 1
+      puts "response => #{response.code}"
+      write_image_from_xml(Nokogiri::HTML(response.body), new_filename)
+    end
 end
 
 summary_message(base_folder, count, image_folders.length)
