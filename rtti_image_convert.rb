@@ -43,8 +43,11 @@ end
 
 image_folders = Dir.glob("#{base_folder}/**/*.jpg")
 
+count = 0
+
 image_folders.each do |file|
   puts "sending  => #{file}"
+  count += 1
 
   new_filename = File.basename(file).downcase.chomp(".jpg")
   new_filename = File.join(base_folder, "evrs/#{new_filename}.tif")
@@ -68,3 +71,5 @@ image_folders.each do |file|
     end
   end
 end
+
+puts "procced #{count}/#{image_folders.length}"
