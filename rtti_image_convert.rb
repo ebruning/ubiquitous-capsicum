@@ -10,6 +10,21 @@ def delete_folder(base_folder)
   FileUtils.rm_rf(Dir.glob("#{base_folder}/evrs/*"))
 end
 
+def write_image_from_xml(doc, new_filename)
+  doc.xpath('//image').each do |link|
+    File.open(new_filename, 'wb') do|f|
+      puts "saving   => #{File.basename(new_filename)}"
+      puts
+      f.write(Base64.decode64(link.content))
+    end
+  end
+end
+
+def summary_message(base, image_count, image_total)
+  puts "output folder #{base}/evrs/"
+  puts "procced #{image_count}/#{image_total}"
+end
+
 options = {}
 options_parsers = OptionParser.new do |opts|
   opts.on("-a ADDRESS") do |address|
@@ -63,14 +78,8 @@ image_folders.each do |file|
 
   puts "response => #{response.code}"
 
-  doc = Nokogiri::HTML(response.body)
-  doc.xpath('//image').each do |link|
-    File.open(new_filename, 'wb') do|f|
-      puts "saving   => #{File.basename(new_filename)}"
-      puts
-      f.write(Base64.decode64(link.content))
-    end
-  end
+  write_image_from_xml(Nokogiri::HTML(response.body), new_filename)
+
 end
-puts "output folder #{base_folder}/evrs/"
-puts "procced #{count}/#{image_folders.length}"
+
+summary_message(base_folder, count, image_folders.length)
