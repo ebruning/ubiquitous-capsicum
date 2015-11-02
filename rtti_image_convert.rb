@@ -86,8 +86,7 @@ failed_images = Array[]
 
 image_folders.each do |file|
   puts "sending  => #{File.basename(file)}"
-
-
+  
   new_filename = File.join(base_folder, "evrs/#{File.basename(file).downcase.chomp(".jpg")}.tif")
 
   begin
