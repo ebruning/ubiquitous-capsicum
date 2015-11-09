@@ -20,15 +20,19 @@ def error(warning)
   puts
 end
 
+def file_status(title, message)
+  puts "#{Tty.white}#{title}#{Tty.reset} => #{Tty.blue}#{message}#{Tty.reset}"
+end
+
 def delete_folder(base_folder)
-  puts "cleaning up evrs folder"
+  puts "#{Tty.white}cleaning up evrs folder#{Tty.reset}"
   FileUtils.rm_rf(Dir.glob("#{base_folder}/evrs/*"))
 end
 
 def write_image_from_xml(doc, new_filename)
   doc.xpath('//image').each do |link|
     File.open(new_filename, 'wb') do|f|
-      puts "#{Tty.white}saving   #{Tty.reset}=> #{Tty.blue}#{File.basename(new_filename)}"
+      file_status("saving", File.basename(new_filename))
       puts
       f.write(Base64.decode64(link.content))
     end
@@ -83,7 +87,7 @@ project = options[:project]
 extension = options[:extension]
 
 if !Dir.exists?("#{base_folder}/evrs/")
-  puts "creating evrs folder"
+  puts "#{Tty.white}creating evrs folder#{Tty.reset}"
   Dir.mkdir("#{base_folder}/evrs/")
 else
   delete_folder (base_folder)
@@ -100,7 +104,7 @@ failedCount = 0
 failed_images = Array[]
 
 image_folders.each do |file|
-  puts "#{Tty.white}sending  #{Tty.reset}=> #{Tty.blue}#{File.basename(file)}"
+  file_status("sending", File.basename(file))
 
   new_filename = File.join(base_folder, "evrs/#{File.basename(file).downcase.chomp(".jpg")}.tif")
 
@@ -122,7 +126,7 @@ image_folders.each do |file|
 
     if (response)
       successfulCount += 1
-      puts "#{Tty.white}response #{Tty.reset}=> #{Tty.blue}#{response.code}"
+      file_status("response", response.code)
       write_image_from_xml(Nokogiri::HTML(response.body), new_filename)
     end
 end
