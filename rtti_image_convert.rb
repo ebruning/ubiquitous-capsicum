@@ -36,8 +36,11 @@ def write_image_from_xml(doc, new_filename)
 end
 
 def summary_message(base, image_count, image_total, images)
+  puts "Summary"
+  puts "-------------"
   puts "output folder #{base}/evrs/"
   puts "processed #{image_count}/#{image_total}"
+  puts "-------------"
 
   if (images.length > 0)
     puts
@@ -46,6 +49,7 @@ def summary_message(base, image_count, image_total, images)
       puts "\t#{file}"
     end
   end
+
 end
 
 options = {}
