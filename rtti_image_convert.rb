@@ -28,7 +28,7 @@ end
 def write_image_from_xml(doc, new_filename)
   doc.xpath('//image').each do |link|
     File.open(new_filename, 'wb') do|f|
-      puts "saving   => #{File.basename(new_filename)}"
+      puts "#{Tty.white}saving   #{Tty.reset}=> #{Tty.blue}#{File.basename(new_filename)}"
       puts
       f.write(Base64.decode64(link.content))
     end
@@ -100,7 +100,7 @@ failedCount = 0
 failed_images = Array[]
 
 image_folders.each do |file|
-  puts "sending  => #{File.basename(file)}"
+  puts "#{Tty.white}sending  #{Tty.reset}=> #{Tty.blue}#{File.basename(file)}"
 
   new_filename = File.join(base_folder, "evrs/#{File.basename(file).downcase.chomp(".jpg")}.tif")
 
@@ -122,7 +122,7 @@ image_folders.each do |file|
 
     if (response)
       successfulCount += 1
-      puts "response => #{response.code}"
+      puts "#{Tty.white}response #{Tty.reset}=> #{Tty.blue}#{response.code}"
       write_image_from_xml(Nokogiri::HTML(response.body), new_filename)
     end
 end
