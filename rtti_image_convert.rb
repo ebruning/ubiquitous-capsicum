@@ -8,7 +8,7 @@ require 'optparse'
 module Tty extend self
   def blue; bold 34; end
   def white; bold 39; end
-  def red; underline 31; end
+  def red; bold 31; end
   def reset; escape 0; end
   def bold n; escape "1;#{n}" end
   def underline n; escape "4;#{n}" end
@@ -35,11 +35,12 @@ def write_image_from_xml(doc, new_filename)
   end
 end
 
-def summary_message(base, image_count, image_total, images)
+def summary_message(base, image_count, failed_count, images)
   puts "Summary"
   puts "-------------"
-  puts "output folder #{base}/evrs/"
-  puts "processed [#{image_count}/#{image_total}]"
+  puts "#{Tty.white}output folder: #{Tty.reset}#{base}/evrs/"
+  puts "#{Tty.white}processed:     #{Tty.reset}#{image_count}"
+  puts "#{Tty.red}failed:        #{Tty.reset}#{failed_count}"
   puts "-------------"
 
   if (images.length > 0)
@@ -94,7 +95,8 @@ end
 
 image_folders = Dir.glob("#{base_folder}/**/*.#{extension}")
 
-count = 0
+successfulCount = 0
+failedCount = 0
 failed_images = Array[]
 
 image_folders.each do |file|
@@ -115,13 +117,14 @@ image_folders.each do |file|
   rescue RestClient::ExceptionWithResponse => err
     error(err)
     failed_images.push(file)
+    failedCount += 1
   end
 
     if (response)
-      count += 1
+      successfulCount += 1
       puts "response => #{response.code}"
       write_image_from_xml(Nokogiri::HTML(response.body), new_filename)
     end
 end
 
-summary_message(base_folder, count, image_folders.length, failed_images)
+summary_message(base_folder, successfulCount, failedCount, failed_images)
