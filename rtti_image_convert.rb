@@ -39,7 +39,7 @@ def summary_message(base, image_count, image_total, images)
   puts "Summary"
   puts "-------------"
   puts "output folder #{base}/evrs/"
-  puts "processed #{image_count}/#{image_total}"
+  puts "processed [#{image_count}/#{image_total}]"
   puts "-------------"
 
   if (images.length > 0)
