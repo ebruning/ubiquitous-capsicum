@@ -104,7 +104,8 @@ failed_images = Array[]
 image_folders.each do |file|
   file_status('sending', File.basename(file))
 
-  new_filename = File.join(base_folder, "evrs/#{File.basename(file).downcase.chomp(".#{extension}")}.tif")
+  new_filename = File.join(base_folder, "evrs/#{File.basename(file).downcase
+                                        .chomp(".#{extension}")}.tif")
 
   begin
     response = RestClient.post("http://#{address}/mobilesdk/api/#{project}",
