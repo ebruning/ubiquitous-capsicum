@@ -54,7 +54,6 @@ def summary_message(base, image_count, failed_count, images)
       puts "\t#{file}"
     end
   end
-
 end
 
 options = {}
