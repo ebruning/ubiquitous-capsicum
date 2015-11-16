@@ -48,13 +48,11 @@ def summary_message(base, image_count, failed_count, images)
   puts '-------------'
 
   return true if images.length > 0
-  # if (images.length > 0)
   puts
   puts "#{Tty.red}failed images#{Tty.reset}\n"
   images.each do |file|
     puts "\t#{file}"
   end
-  # end
 end
 
 options = {}
@@ -124,11 +122,11 @@ image_folders.each do |file|
     failed_count += 1
   end
 
-    if (response)
-      successful_count += 1
-      file_status('response', response.code)
-      write_image_from_xml(Nokogiri::HTML(response.body), new_filename)
-    end
+  if (response)
+    successful_count += 1
+    file_status('response', response.code)
+    write_image_from_xml(Nokogiri::HTML(response.body), new_filename)
+  end
 end
 
 summary_message(base_folder, successful_count, failed_count, failed_images)
