@@ -2,7 +2,7 @@
 
 require 'rest_client'
 require 'nokogiri'
-require "base64"
+require 'base64'
 require 'optparse'
 
 module Tty extend self
@@ -32,7 +32,7 @@ end
 def write_image_from_xml(doc, new_filename)
   doc.xpath('//image').each do |link|
     File.open(new_filename, 'wb') do|f|
-      file_status("saving", File.basename(new_filename))
+      file_status('saving', File.basename(new_filename))
       puts
       f.write(Base64.decode64(link.content))
     end
@@ -40,12 +40,12 @@ def write_image_from_xml(doc, new_filename)
 end
 
 def summary_message(base, image_count, failed_count, images)
-  puts "Summary"
-  puts "-------------"
+  puts 'Summary'
+  puts '-------------'
   puts "#{Tty.white}output folder: #{Tty.reset}#{base}/evrs/"
   puts "#{Tty.white}processed:     #{Tty.reset}#{image_count}"
   puts "#{Tty.red}failed:        #{Tty.reset}#{failed_count}"
-  puts "-------------"
+  puts '-------------'
 
   if (images.length > 0)
     puts
@@ -59,19 +59,19 @@ end
 
 options = {}
 options_parsers = OptionParser.new do |opts|
-  opts.on("-a ADDRESS") do |address|
+  opts.on('-a ADDRESS') do |address|
     options[:address] = address
   end
 
-  opts.on("-p PROJECT", "--project PROJECT") do |project|
+  opts.on('-p PROJECT', '--project PROJECT') do |project|
     options[:project] = project
   end
 
-  opts.on("-e EXT", "--extension EXT") do |extension|
+  opts.on('-e EXT', '--extension EXT') do |extension|
     options[:extension] = extension
   end
 
-  opts.on("-d DIRECTORY") do |directory|
+  opts.on('-d DIRECTORY') do |directory|
     unless Dir.exists?(directory)
       raise ArgumentError, "The #{directory} directory doesn't exist"
     end
@@ -94,7 +94,7 @@ else
 end
 
 if extension.nil?
-  raise ArgumentError, "Need to pass a file extension to use"
+  raise ArgumentError, 'Need to pass a file extension to use'
 end
 
 image_folders = Dir.glob("#{base_folder}/**/*.#{extension}")
@@ -104,7 +104,7 @@ failedCount = 0
 failed_images = Array[]
 
 image_folders.each do |file|
-  file_status("sending", File.basename(file))
+  file_status('sending', File.basename(file))
 
   new_filename = File.join(base_folder, "evrs/#{File.basename(file).downcase.chomp(".#{extension}")}.tif")
 
@@ -126,7 +126,7 @@ image_folders.each do |file|
 
     if (response)
       successfulCount += 1
-      file_status("response", response.code)
+      file_status('response', response.code)
       write_image_from_xml(Nokogiri::HTML(response.body), new_filename)
     end
 end
