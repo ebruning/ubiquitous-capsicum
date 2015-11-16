@@ -91,8 +91,9 @@ else
   delete_folder(base_folder)
 end
 
-extension.nil? fail ArgumentError, 'Need to pass a file extension to use'
-
+unless extension.nil?
+  fail ArgumentError, 'Need to pass a file extension to use'
+end
 image_folders = Dir.glob("#{base_folder}/**/*.#{extension}")
 
 successful_count = 0
