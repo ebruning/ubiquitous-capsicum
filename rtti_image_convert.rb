@@ -126,6 +126,7 @@ image_folders.each do |file|
     successful_count += 1
     file_status('response', response.code)
     write_image_from_xml(Nokogiri::HTML(response.body), new_filename)
+    break
   end
 end
 
