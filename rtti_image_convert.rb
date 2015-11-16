@@ -109,10 +109,10 @@ image_folders.each do |file|
   begin
     response = RestClient.post("http://#{address}/mobilesdk/api/#{project}",
                                   {
-                                    :processImage => 'true',
-                                    :imageResult => 'true',
-                                    :accept => :json,
-                                    :name_of_file_param => File.new(file)
+                                    processImage: 'true',
+                                    imageResult: 'true',
+                                    accept: :json,
+                                    name_of_file_param: File.new(file)
                                   }
                               )
 
