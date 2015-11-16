@@ -47,13 +47,14 @@ def summary_message(base, image_count, failed_count, images)
   puts "#{Tty.red}failed:        #{Tty.reset}#{failed_count}"
   puts '-------------'
 
-  if (images.length > 0)
-    puts
-    puts "#{Tty.red}failed images#{Tty.reset}\n"
-    images.each do |file|
-      puts "\t#{file}"
-    end
+  return true if images.length > 0
+  # if (images.length > 0)
+  puts
+  puts "#{Tty.red}failed images#{Tty.reset}\n"
+  images.each do |file|
+    puts "\t#{file}"
   end
+  # end
 end
 
 options = {}
@@ -98,8 +99,8 @@ end
 
 image_folders = Dir.glob("#{base_folder}/**/*.#{extension}")
 
-successfulCount = 0
-failedCount = 0
+successful_count = 0
+failed_count = 0
 failed_images = Array[]
 
 image_folders.each do |file|
@@ -120,14 +121,14 @@ image_folders.each do |file|
   rescue RestClient::ExceptionWithResponse => err
     error(err)
     failed_images.push(file)
-    failedCount += 1
+    failed_count += 1
   end
 
     if (response)
-      successfulCount += 1
+      successful_count += 1
       file_status('response', response.code)
       write_image_from_xml(Nokogiri::HTML(response.body), new_filename)
     end
 end
 
-summary_message(base_folder, successfulCount, failedCount, failed_images)
+summary_message(base_folder, successful_count, failed_count, failed_images)
