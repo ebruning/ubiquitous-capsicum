@@ -122,11 +122,17 @@ image_folders.each do |file|
     failed_count += 1
   end
 
-  if (response)
+  while response
     successful_count += 1
     file_status('response', response.code)
     write_image_from_xml(Nokogiri::HTML(response.body), new_filename)
   end
+
+  # if response
+  #   successful_count += 1
+  #   file_status('response', response.code)
+  #   write_image_from_xml(Nokogiri::HTML(response.body), new_filename)
+  # end
 end
 
 summary_message(base_folder, successful_count, failed_count, failed_images)
