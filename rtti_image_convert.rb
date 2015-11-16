@@ -71,8 +71,8 @@ options_parsers = OptionParser.new do |opts|
   end
 
   opts.on('-d DIRECTORY') do |directory|
-    unless Dir.exists?(directory)
-      raise ArgumentError, "The #{directory} directory doesn't exist"
+    unless Dir.exist?(directory)
+      fail ArgumentError, "The #{directory} directory doesn't exist"
     end
     options[:directory] = directory
   end
@@ -85,15 +85,15 @@ address = options[:address]
 project = options[:project]
 extension = options[:extension]
 
-if !Dir.exists?("#{base_folder}/evrs/")
+if !Dir.exist?("#{base_folder}/evrs/")
   puts "#{Tty.white}creating evrs folder#{Tty.reset}"
   Dir.mkdir("#{base_folder}/evrs/")
 else
-  delete_folder (base_folder)
+  delete_folder(base_folder)
 end
 
 if extension.nil?
-  raise ArgumentError, 'Need to pass a file extension to use'
+  fail ArgumentError, 'Need to pass a file extension to use'
 end
 
 image_folders = Dir.glob("#{base_folder}/**/*.#{extension}")
