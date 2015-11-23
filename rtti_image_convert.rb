@@ -30,6 +30,15 @@ def delete_folder(base_folder)
   FileUtils.rm_rf(Dir.glob("#{base_folder}/evrs/*"))
 end
 
+def write_file_from_json(json, new_filename)
+  file = json[0]['processedImages'][0]['image']
+  File.open(new_filename, 'wb') do|f|
+    file_status('saving', File.basename(new_filename))
+    puts
+    f.write(Base64.decode64(file))
+  end
+end
+
 def write_image_from_xml(doc, new_filename)
   doc.xpath('//image').each do |link|
     File.open(new_filename, 'wb') do|f|
@@ -133,7 +142,7 @@ image_folders.each do |file|
   while response
     successful_count += 1
     file_status('response', response.code)
-    write_image_from_xml(Nokogiri::HTML(response.body), new_filename)
+    write_file_from_json(response.body, new_filename)
     break
   end
 end
