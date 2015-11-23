@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
-require 'rest_client'
+#require 'rest_client'
+require 'unirest'
 require 'nokogiri'
 require 'base64'
 require 'optparse'
@@ -57,28 +58,45 @@ end
 
 options = {}
 options_parsers = OptionParser.new do |opts|
-  opts.on('-a ADDRESS') do |address|
+  opts.on('-a ADDRESS', '--server ADDRESS', 'RTTI server') do |address|
     options[:address] = address
   end
 
-  opts.on('-p PROJECT', '--project PROJECT') do |project|
+  opts.on('-r', '--return-image', 'Return cleaned image to client') do
+    options[:return_image] = true
+    options[:clean_image] = true
+  end
+
+  opts.on('-c', '--clean-image', 'Run IP on server') do
+    options[:clean_image] = true
+  end
+
+  opts.on('-p PROJECT', '--project PROJECT', 'KTM project to use') do |project|
     options[:project] = project
   end
 
-  opts.on('-e EXT', '--extension EXT') do |extension|
+  opts.on('-e EXT', '--extension EXT', 'Extension to import') do |extension|
     options[:extension] = extension
   end
 
-  opts.on('-d DIRECTORY') do |directory|
+  opts.on('-d DIRECTORY', '--directory DIRECTORY', 'Folder to scan') do |directory|
     unless Dir.exist?(directory)
       fail ArgumentError, "The #{directory} directory doesn't exist"
     end
     options[:directory] = directory
   end
+
+  opts.on_tail("-h", "--help") do
+    puts opts
+    exit
+  end
 end
 
 options_parsers.parse!
+puts options.inspect
 
+puts options[:return_image]
+exit
 base_folder = options[:directory]
 address = options[:address]
 project = options[:project]
@@ -107,15 +125,12 @@ image_folders.each do |file|
                                         .chomp(".#{extension}")}.tif")
 
   begin
-    response = RestClient.post("http://#{address}/mobilesdk/api/#{project}",
-                                  {
-                                    processImage: 'true',
-                                    imageResult: 'true',
-                                    accept: :json,
-                                    name_of_file_param: File.new(file)
-                                  }
-                              )
+    response = Unirest.post "http://#{address}/mobilesdk/api/#{project}",
+                        headers:{ "Accept" => "application/json" },
+                        parameters:{ :fieldNameHere => File.new(file), :processImage => 'true', :imageResult =>'true' }
 
+    puts response.body
+    exit
   rescue RestClient::ExceptionWithResponse => err
     error(err)
     failed_images.push(file)
