@@ -93,10 +93,6 @@ options_parsers = OptionParser.new do |opts|
 end
 
 options_parsers.parse!
-puts options.inspect
-
-puts options[:return_image]
-exit
 base_folder = options[:directory]
 address = options[:address]
 project = options[:project]
@@ -127,7 +123,7 @@ image_folders.each do |file|
   begin
     response = Unirest.post "http://#{address}/mobilesdk/api/#{project}",
                         headers:{ "Accept" => "application/json" },
-                        parameters:{ :fieldNameHere => File.new(file), :processImage => 'true', :imageResult =>'true' }
+                        parameters:{ :fieldNameHere => File.new(file), :processImage => options[:clean_image], :imageResult =>options[:return_image] }
 
     puts response.body
     exit
