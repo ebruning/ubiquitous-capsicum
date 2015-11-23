@@ -86,7 +86,7 @@ options_parsers = OptionParser.new do |opts|
     options[:directory] = directory
   end
 
-  opts.on_tail("-h", "--help") do
+  opts.on_tail('-h', '--help') do
     puts opts
     exit
   end
@@ -124,9 +124,6 @@ image_folders.each do |file|
     response = Unirest.post "http://#{address}/mobilesdk/api/#{project}",
                         headers:{ "Accept" => "application/json" },
                         parameters:{ :fieldNameHere => File.new(file), :processImage => options[:clean_image], :imageResult =>options[:return_image] }
-
-    puts response.body
-    exit
   rescue RestClient::ExceptionWithResponse => err
     error(err)
     failed_images.push(file)
