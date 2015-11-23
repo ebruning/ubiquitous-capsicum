@@ -123,7 +123,7 @@ image_folders.each do |file|
   begin
     response = Unirest.post "http://#{address}/mobilesdk/api/#{project}",
                         headers:{ "Accept" => "application/json" },
-                        parameters:{ :fieldNameHere => File.new(file), :processImage => options[:clean_image], :imageResult =>options[:return_image] }
+                        parameters:{ :fieldNameHere => File.new(file), :processImage => !!options[:clean_image], :imageResult => !!options[:return_image] }
   rescue RestClient::ExceptionWithResponse => err
     error(err)
     failed_images.push(file)
