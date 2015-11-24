@@ -30,7 +30,12 @@ def delete_folder(base_folder)
   FileUtils.rm_rf(Dir.glob("#{base_folder}/evrs/*"))
 end
 
-def write_file_from_json(json, new_filename)
+def write_file_from_json(json, base_folder, filename)
+  extension = json[0]['processedImages'][0]['imageType']
+  new_filename = File.join(base_folder, "evrs/#{File.basename(filename).downcase
+                                        .chomp(".#{extension}")}.tif")
+  puts new_filename
+  exit
   file = json[0]['processedImages'][0]['image']
   File.open(new_filename, 'wb') do|f|
     file_status('saving', File.basename(new_filename))
@@ -126,9 +131,6 @@ failed_images = Array[]
 image_folders.each do |file|
   file_status('sending', File.basename(file))
 
-  new_filename = File.join(base_folder, "evrs/#{File.basename(file).downcase
-                                        .chomp(".#{extension}")}.tif")
-
   begin
     response = Unirest.post "http://#{address}/mobilesdk/api/#{project}",
                         headers:{ "Accept" => "application/json" },
@@ -142,7 +144,7 @@ image_folders.each do |file|
   while response
     successful_count += 1
     file_status('response', response.code)
-    write_file_from_json(response.body, new_filename)
+    write_file_from_json(response.body, base_folder, file)
     break
   end
 end
