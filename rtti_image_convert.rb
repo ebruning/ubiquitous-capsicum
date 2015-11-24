@@ -30,12 +30,16 @@ def delete_folder(base_folder)
   FileUtils.rm_rf(Dir.glob("#{base_folder}/evrs/*"))
 end
 
-def write_file_from_json(json, base_folder, filename)
-  extension = json[0]['processedImages'][0]['imageType']
+def write_file_from_json(json, base_folder, filename, extension)
+  ext = json[0]['processedImages'][0]['imageType']
+
+  if ext == 'tiff'
+    ext = 'tif'
+  end
+
   new_filename = File.join(base_folder, "evrs/#{File.basename(filename).downcase
-                                        .chomp(".#{extension}")}.tif")
-  puts new_filename
-  exit
+                                        .chomp(".#{extension}")}.#{ext}")
+
   file = json[0]['processedImages'][0]['image']
   File.open(new_filename, 'wb') do|f|
     file_status('saving', File.basename(new_filename))
@@ -144,7 +148,7 @@ image_folders.each do |file|
   while response
     successful_count += 1
     file_status('response', response.code)
-    write_file_from_json(response.body, base_folder, file)
+    write_file_from_json(response.body, base_folder, file, extension)
     break
   end
 end
